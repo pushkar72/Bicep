@@ -1,12 +1,19 @@
 
 param storageaccountname string
-param rglocation string= resourceGroup().location
-//variable
-var appserviceplan ='pushkar-free-plan'
+param rglocation string
+param appServiceName string
+
+param sqlservername string
+param sqldbname string
+@secure()
+param sqladmin string
+@secure()
+param sqlpassword string
+
 
 //storage account
 resource storageaccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
-  name: 'pushkar-${uniqueString(resourceGroup().id)}'
+  name: storageaccountname
   location: rglocation
   kind: 'StorageV2'
   sku: {
@@ -14,23 +21,29 @@ resource storageaccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
   }
 }
 
-//app service plan
-resource appServicePlan 'Microsoft.Web/serverFarms@2022-03-01' = {
-  name: 'pushkar-product-launch-plan-starter'
-  location: rglocation
-  sku: {
-    name: 'F1'
+module appService 'modules/appService.bicep' = {
+  name: 'appService'
+  params: {
+    rglocation: rglocation
+    appServiceName: appServiceName
   }
 }
-//web app service
-resource appServiceApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: appserviceplan
-  location: rglocation
-  properties: {
-    serverFarmId: appServicePlan.id
-    httpsOnly: true
+
+module sqlServer 'modules/sqldatabase.bicep'={
+  name: 'sqlServer'
+  params:{
+    rglocation:rglocation
+    sqladmin: sqladmin
+    sqldbname:sqldbname
+    sqlpassword:sqlpassword
+    sqlservername:sqlservername
   }
 }
+
+
+
+
+
 
 
 
