@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.19.5.34762",
+      "templateHash": "10119260671299167193"
+    }
+  },
+  "parameters": {
+    "storageaccountname": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "appserviceplan": "pushkar-free-plan"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2021-02-01",
+      "name": "[format('pushkar-{0}', uniqueString(resourceGroup().id))]",
+      "location": "[resourceGroup().location]",
+      "kind": "StorageV2",
+      "sku": {
+        "name": "Premium_LRS"
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2022-03-01",
+      "name": "pushkar-product-launch-plan-starter",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "F1"
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-03-01",
+      "name": "[variables('appserviceplan')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', 'pushkar-product-launch-plan-starter')]",
+        "httpsOnly": true
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', 'pushkar-product-launch-plan-starter')]"
+      ]
+    }
+  ]
+}
