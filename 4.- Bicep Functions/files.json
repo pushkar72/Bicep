@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.15.31.15270",
+      "templateHash": "9815772878051089502"
+    }
+  },
+  "variables": {
+    "$fxv#0": {
+      "description": "Allows SSH traffic",
+      "protocol": "Tcp",
+      "sourcePortRange": "*",
+      "destinationPortRange": "22",
+      "sourceAddressPrefix": "*",
+      "destinationAddressPrefix": "*",
+      "access": "Allow",
+      "priority": 100,
+      "direction": "Inbound"
+    },
+    "textContent": "VGhpcyBpcyBhIHRlc3Q=",
+    "rules": "[variables('$fxv#0')]"
+  },
+  "resources": []
+}
